@@ -6,20 +6,20 @@ import torch.nn.functional as F
 import torch
 from tqdm.auto import tqdm
 from collections import OrderedDict
+from src.prompt_utils import llama_v2_prompt
 
 
 class TextDataset(Dataset):
-    def __init__(self, directory, tokenizer, model, chats, labels,
+    def __init__(self, tokenizer, model, chats, labels,
                  convert_to_llama2_format=False, user_identifier="HUMAN:", ai_identifier="ASSISTANT:",
                  additional_datas=None, new_format=False,
                  include_inst=False, one_hot=False):
         self.tokenizer = tokenizer
         self.chats = chats
         self.labels = labels
+        self.actual_labels = labels
         self.acts = []
         self.texts = []
-        self.label_idf = label_idf
-        self.label_to_id = label_to_id
         self.model = model
         self.convert_to_llama2_format = convert_to_llama2_format
         self.user_identifier = user_identifier
@@ -40,11 +40,11 @@ class TextDataset(Dataset):
                     text = llama_v2_prompt(messages_dict)
                 except Exception as e:
                     print(e)
+                    print(messages_dict)
                     continue
+            self.actual_labels.append(labels[idx])
               
-            if self.new_format and self.if_remove_last_ai_response and self.include_inst:
-                text = text[text.find("<s>") + len("<s>"):]
-            elif self.new_format and self.include_inst:
+            if self.new_format and self.include_inst:
                 text = text[text.find("<s>") + len("<s>"):]
             elif self.new_format:
                 text = text[text.find("<s>") + len("<s>"): text.rfind("[/INST]") - 1]
@@ -78,8 +78,6 @@ class TextDataset(Dataset):
             self.texts.append(text)
             self.acts.append(last_acts)
             
-        for path in corrupted_file_paths:
-            self.file_paths.remove(path)
     def __getitem__(self, idx):
         label = self.labels[idx]
         text = self.texts[idx]
@@ -92,3 +90,16 @@ class TextDataset(Dataset):
             'text': text,
         }
     
+    
+class ModuleHook:
+    def __init__(self, module):
+        self.hook = module.register_forward_hook(self.hook_fn)
+        self.module = None
+        self.features = []
+
+    def hook_fn(self, module, input, output):
+        self.module = module
+        self.features.append(output.detach())
+
+    def close(self):
+        self.hook.remove()
