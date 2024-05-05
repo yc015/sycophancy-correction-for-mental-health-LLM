@@ -18,19 +18,26 @@ This repo contains the code for reproducing the experiments in **Toward Non-syco
 - [internal_model_of_sycophancy.ipynb](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/internal_model_of_sycophancy.ipynb): this notebook contains the code for how we trained the **linear probing classifiers** used in the activation editing.
 
 ## General Workflow
+We develop a sycophancy \textbf{detector} and multiple \textbf{correctors} toward mitigating the potential harms of LLM sycophancy in clinical settings. 
 ### Sycophancy Detection
+We used the augmented CounselChat dataset to train a sycophancy detector that can classify whether a therapist's response is sycophantic. Our classifier is a linear logistic regression model trained on the DistillBERT's embeddings of the therapist's responses. Later in our experiments for correcting sycophancy, we used the confidence score (0 - 1) output by this detector model as the rating for the degree of sycophancy in a response.
 ![detection_pipeline](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/detector.png)
 
 ### Sycophancy Correction
+The step after detecting sycophancy is to correct it! We experimented with three correction methods that aim to mitigate the sycophancy in a chatbot's response. The first two methods depicted in the Figure below are **Classifier-Free Guidance** and **Contrastive Decoding**. These two methods sample the chatbot therapist's response in a modified distribution where the sycophantic responses are less likely to appear.
 ![correction_method](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/correction_figure.png)
 
-We also experimented with an activation editing approach which is not depicted in the Figure above. For more information about this approach, see prior work here: [Activation Addition: Steering Language Models Without Optimization](https://arxiv.org/abs/2308.10248).
+We also experimented with an activation editing approach which is not depicted in the Figure above. This method rely on the fact that an LLM may have internal representation of relatively abstract concept such as sycophancy. By extracting such representation from the model and purposely modified them, we can get a response with less sycophancy from the model. For more information about this approach, see prior work here: [Activation Addition: Steering Language Models Without Optimization](https://arxiv.org/abs/2308.10248).
 
 ## Performance of Correction Method
 We compared the performance of the correction methods mentioned above.
 ### Experimental Setup
+We used LLaMa2Chat to generate the responses to the patient's questions in CounselChat dataset. In particular, we compared the responsed generated under 4 condition: (1) without any correction method applied, (2) with **Classifier-Free Guidance**, (3) with **Contrastive Decoding**, and (4) with **Activation Editing**. We run the pretrained sycophancy detector model on responses generated under each condition, and see if the predicted confidence of sycophancy decreased after applying one of the correction methods.
 ![correction_experiment](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/experiment.png)
 
 ### Results
-Among the three proposed correction method, the activation editing performed the best in terms of reducing the chatbot therapist's sycophantic responses.
-![correction_result](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/correction_results.png)
+Among the three proposed correction method, the activation editing performed the best in terms of reducing the chatbot therapist's sycophantic responses. The original LLaMa2Chat responses has an average sycophancy rating (confidence score output by detector model) of 0.138. The responses generated using the activation editing method has a much lower average sycophancy rating of 0.002. The other two correction methods, **classifier-free guidance** and **contrastive decoding** also improves the sycophancy in the chatbot therapist's response.
+
+<p align="center">
+  <img src="https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/correction_results.png" alt="correction_result" width=600px/>
+</p>
