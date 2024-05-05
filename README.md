@@ -32,7 +32,14 @@ We also experimented with an activation editing approach which is not depicted i
 ## Performance of Correction Method
 We compared the performance of the correction methods mentioned above.
 ### Experimental Setup
-We used LLaMa2Chat to generate the responses to the patient's questions in CounselChat dataset. In particular, we compared the responsed generated under 4 condition: (1) without any correction method applied, (2) with **Classifier-Free Guidance**, (3) with **Contrastive Decoding**, and (4) with **Activation Editing**. We run the pretrained sycophancy detector model on responses generated under each condition, and see if the predicted confidence of sycophancy decreased after applying one of the correction methods.
+We used LLaMa2Chat to generate the responses to the patient's questions in CounselChat dataset. In particular, we compared the responsed generated under 4 conditions:
+
+1. without any correction method applied
+2. with **Classifier-Free Guidance**
+3. with **Contrastive Decoding**
+4. with **Activation Editing**. 
+
+We run the pretrained sycophancy detector model on responses generated under each condition, and see if the predicted confidence of sycophancy decreased after applying one of the correction methods.
 ![correction_experiment](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/experiment.png)
 
 ### Results
