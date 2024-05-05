@@ -1,4 +1,4 @@
-# Detecting and Correcting Sycophancy in Talk Therapist Chatbot
+# Detecting and Correcting Sycophancy of Chatbot Therapist
 
 Team: [Yida Chen](https://yc015.github.io/), [Catherine Yeh](https://catherinesyeh.github.io/), [Jerry Huang](https://www.linkedin.com/in/jerryh01?miniProfileUrn=urn%3Ali%3Afs_miniProfile%3AACoAAB_tAjoB0RDPcPJKWNv_-Wd1_rmtxuEfGdM&lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_people%3BpiizAGN6Tl%2BJDLTjDSUu6g%3D%3D)
 
