@@ -40,10 +40,10 @@ We used the augmented CounselChat dataset to train a sycophancy detector that ca
 ![detection_pipeline](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/detector.png)
 
 ### Sycophancy Correction
-The step after detecting sycophancy is to correct it! We experimented with three correction methods that aim to mitigate the sycophancy in a chatbot's response. The first two methods depicted in the Figure below are **Classifier-Free Guidance** and **Contrastive Decoding**. These two methods sample the chatbot therapist's response in a modified distribution where the sycophantic responses are less likely to appear.
+The step after detecting sycophancy is to correct it! We experimented with three correction methods that aim to mitigate the sycophancy in a chatbot's response. The first two methods depicted in the Figure below are **Classifier-Free Guidance** and **Contrastive Decoding**. These two methods sample the chatbot therapist's responses from a modified distribution where the sycophantic responses are less likely to appear.
 ![correction_method](https://github.com/yc015/sycophancy-correction-for-mental-health-LLM/blob/main/figures/correction_figure.png)
 
-We also experimented with an activation editing approach which is not depicted in the Figure above. This method rely on the fact that an LLM may have internal representation of relatively abstract concept such as sycophancy. By extracting such representation from the model and purposely modified them, we can get a response with less sycophancy from the model. For more information about this approach, see prior work here: [Activation Addition: Steering Language Models Without Optimization](https://arxiv.org/abs/2308.10248).
+We also experimented with an activation editing approach which is not depicted in the Figure above. This method relies on the possibility that an LLM may have an internal representation of the abstract concept, such as sycophancy. By extracting such representation from the model and purposely modified it, we can get a response with less sycophancy from the chatbot model. For more information about this approach, see this prior work: [Activation Addition: Steering Language Models Without Optimization](https://arxiv.org/abs/2308.10248).
 
 ## Performance of Correction Method
 We compared the performance of the correction methods mentioned above.
